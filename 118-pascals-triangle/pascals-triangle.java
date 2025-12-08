@@ -1,35 +1,28 @@
 class Solution {
     public List<List<Integer>> generate(int numRows) {
         List<List<Integer>> res = new ArrayList<>();
-
         if(numRows == 0){
             return res;
         }
 
-        for(int i = 0; i < numRows; i++){
-            List<Integer> currentRow = new ArrayList<>();
-            for(int j = 0; j <= i; j++){
-                currentRow.add(nCr(i,j));
+        List<Integer> firstRow = new ArrayList<>();
+        firstRow.add(1);
+        res.add(firstRow);
+
+        for(int i = 1; i < numRows; i++){
+            List<Integer> prevRow = res.get(i - 1);
+            List<Integer> currRow = new ArrayList<>();
+            currRow.add(1);
+
+            for(int j = 1; j < i; j++){
+                int val = prevRow.get(j - 1) + prevRow.get(j);
+                currRow.add(val);
             }
-        res.add(currentRow);
+
+            currRow.add(1);
+            res.add(currRow);
         }
 
         return res;
-    }
-
-
-
-
-    private int nCr(int n, int r){
-        if(r > n - r){
-            r = n - r;
-        }
-        long res = 1;
-        for(int i = 0; i < r; i++){
-            res = res * (n - i);
-            res = res / (i + 1);
-        }
-
-        return (int) res;
     }
 }
