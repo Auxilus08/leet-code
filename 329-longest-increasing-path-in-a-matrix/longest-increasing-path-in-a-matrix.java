@@ -1,0 +1,43 @@
+class Solution {
+    private int[][] memo;
+    private int m, n;
+    private int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    public int longestIncreasingPath(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) return 0;
+        
+        m = matrix.length;
+        n = matrix[0].length;
+        memo = new int[m][n];
+        int maxPath = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                maxPath = Math.max(maxPath, dfs(matrix, i, j));
+            }
+        }
+        
+        return maxPath;
+    }
+
+    private int dfs(int[][] matrix, int r, int c) {
+        // Return cached result if available
+        if (memo[r][c] != 0) return memo[r][c];
+
+        int currentMax = 1;
+
+        for (int[] dir : dirs) {
+            int nr = r + dir[0];
+            int nc = c + dir[1];
+
+            // Check boundaries and if the next step is strictly increasing
+            if (nr >= 0 && nr < m && nc >= 0 && nc < n && matrix[nr][nc] > matrix[r][c]) {
+                currentMax = Math.max(currentMax, 1 + dfs(matrix, nr, nc));
+            }
+        }
+
+        // Cache and return
+        memo[r][c] = currentMax;
+        return currentMax;
+    }
+}
