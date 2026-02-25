@@ -1,30 +1,33 @@
 class Solution {
     public int[] sortByBits(int[] arr) {
-        Integer[] nums = Arrays.stream(arr).boxed().toArray(Integer[]::new);
-        Comparator<Integer> comparator = new CustomComparator();
-        Arrays.sort(nums, comparator);
-        return Arrays.stream(nums).mapToInt(Integer::intValue).toArray();
-    }
-}
+        int[][] buckets = new int[32][];
+        int[] sizes = new int[32];
 
-class CustomComparator implements Comparator<Integer> {
-    private int findWeight(int num) {
-        int weight = 0;
-        
-        while (num > 0) {
-            weight++;
-            num &= (num - 1);
+        for (int num : arr) {
+            sizes[Integer.bitCount(num)]++;
         }
-        
-        return weight;
-    }
-    
-    @Override
-    public int compare(Integer a, Integer b) {
-        if (findWeight(a) == findWeight(b)) {
-            return a - b;
+
+        for (int i = 0; i < 32; i++) {
+            buckets[i] = new int[sizes[i]];
         }
-        
-        return findWeight(a) - findWeight(b);
+
+        Arrays.fill(sizes, 0);
+
+        for (int num : arr) {
+            int bits = Integer.bitCount(num);
+            buckets[bits][sizes[bits]++] = num;
+        }
+
+        int index = 0;
+        for (int i = 0; i < 32; i++) {
+            if (buckets[i].length > 0) {
+                Arrays.sort(buckets[i]);
+                for (int num : buckets[i]) {
+                    arr[index++] = num;
+                }
+            }
+        }
+
+        return arr;
     }
 }
