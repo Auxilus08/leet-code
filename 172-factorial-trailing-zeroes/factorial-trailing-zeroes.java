@@ -4,7 +4,6 @@ class Solution {
         while(n > 0) {
             n /= 5;
             sum+= n;
-            if(n < 5) break;
             
         }
 
